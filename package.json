@@ -1,0 +1,12 @@
+{
+	"name": "dynamite",
+	"version": "1.0.0",
+	"description": "",
+	"main": "dynamite-cli.js",
+	"scripts": {
+		"test": "node dynamite-cli.js ./gebaliBotV2.js ./examples/dynamiteBot.js"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC"
+}
