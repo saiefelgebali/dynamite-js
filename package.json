@@ -4,7 +4,9 @@
 	"description": "",
 	"main": "dynamite-cli.js",
 	"scripts": {
-		"test": "node dynamite-cli.js ./gebaliBotV2.js ./examples/dynamiteBot.js"
+		"test:dynamite": "node dynamite-cli.js ./gebaliBotV4.js ./examples/dynamiteBot.js",
+		"test:random": "node dynamite-cli.js ./gebaliBotV4.js ./examples/randomBot.js",
+		"test:rock": "node dynamite-cli.js ./gebaliBotV4.js ./examples/rockBot.js"
 	},
 	"keywords": [],
 	"author": "",
