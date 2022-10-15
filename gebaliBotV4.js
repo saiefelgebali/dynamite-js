@@ -18,13 +18,6 @@ class Game {
 		return this.gamestate.rounds.length;
 	}
 
-	getPreviousRoundWasDraw(n = 0) {
-		if (this.isFirstRound()) {
-			return false;
-		}
-		return this.getPreviousMove("p1", n) === this.getPreviousMove("p2", n);
-	}
-
 	getPreviousDrawsWereDynamite() {
 		if (this.getRoundNumber() < 3) {
 			return false;
@@ -38,26 +31,49 @@ class Game {
 	}
 
 	getDrawLength(n = 0) {
-		if (!this.getPreviousRoundWasDraw(n)) {
+		if (!this.getMoveFromEndWasDraw(n)) {
 			return 0;
 		}
 
-		return 1 + this.getPreviousRoundWasDraw(n + 1);
-	}
-
-	getPreviousMove(player, n = 0) {
-		return this.getPreviousRound(n)[player];
+		return 1 + this.getDrawLength(n + 1);
 	}
 
 	getPreviousMoves(player, n) {
 		const moves = new Array(n).fill("");
 		return moves.map((_, i) => {
-			return this.getPreviousMove(player, i);
+			return this.getMoveFromEnd(player, i);
 		});
 	}
 
-	getPreviousRound(n = 0) {
+	getRoundFromEnd(n) {
 		return this.gamestate.rounds[this.gamestate.rounds.length - (1 + n)];
+	}
+
+	getMoveFromEnd(player, n) {
+		return this.getRoundFromEnd(n)[player];
+	}
+
+	getMoveFromEndWasDraw(n) {
+		if (n > this.getRoundNumber() - 1) {
+			return false;
+		}
+
+		return this.getMoveFromEnd("p1", n) === this.getMoveFromEnd("p2", n);
+	}
+
+	getPreviousRound() {
+		return this.getRoundFromEnd(0);
+	}
+
+	getPreviousRoundWasDraw() {
+		if (this.isFirstRound()) {
+			return false;
+		}
+		return this.getPreviousMove("p1") === this.getPreviousMove("p2");
+	}
+
+	getPreviousMove(player) {
+		return this.getPreviousRound()[player];
 	}
 }
 
@@ -105,10 +121,21 @@ class Bot {
 				return this.playWaterMove();
 			}
 
-			return this.playDynamiteMove();
+			return this.playDynamiteOrWaterMove();
 		}
 
 		return this.playRandomMove();
+	}
+
+	playBetween(moves) {
+		return moves[Math.floor(Math.random() * moves.length)];
+	}
+
+	playDynamiteOrWaterMove() {
+		return this.playBetween([
+			this.playDynamiteMove(),
+			this.playWaterMove(),
+		]);
 	}
 
 	playWaterMove() {
